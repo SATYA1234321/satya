@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>B.Tech Result - GEC Autonomous College</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #c0e6ed;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      background: white;
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      color: #003399;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #666;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #e0e0e0;
+    }
+    .footer {
+      margin-top: 20px;
+      text-align: right;
+    }
+    .grade-description {
+      font-size: 0.85em;
+      color: #555;
+    }
+    .action-buttons {
+      margin-top: 20px;
+    }
+    .action-buttons button {
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    @media print {
+      .action-buttons {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="result-container">
+    <h1>GEC AUTONOMOUS COLLEGE</h1>
+    <h2>B.Tech Result Publication</h2>
+    <h3>GANDHI ENGINEERING COLLEGE (GEC AUTONOMOUS)</h3>
+    <p><strong>Examination:</strong> B.Tech First Semester | <strong>Type:</strong> Regular</p>
+
+    <table id="result-table">
+      <thead>
+        <tr>
+          <th>Sl. No.</th>
+          <th>Subject Code</th>
+          <th>Subject Name</th>
+          <th>Type</th>
+          <th>Marks</th>
+          <th>Grade</th>
+          <th>Credit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>24BTBTS101</td><td>MATHEMATICS-II</td><td>Theory</td><td></td><td></td><td></td></tr>
+        <tr><td>2</td><td>24BTDTEES103</td><td>OOPS</td><td>Theory</td><td></td><td></td><td></td></tr>
+        <tr><td>3</td><td>24BTDTEES101</td><td>DATA STRUCTURE</td><td>Theory</td><td></td><td></td><td></td></tr>
+        <tr><td>4</td><td>24BTDTEES102</td><td>WEB PROGRAMMING</td><td>Theory</td><td></td><td></td><td></td></tr>
+        <tr><td>5</td><td>24BTDTHSS101</td><td>GREEN TECHNOLOGY</td><td>Theory</td><td></td><td></td><td></td></tr>
+        <tr><td>6</td><td>24BTDTEES202</td><td>UHV</td><td>Theory</td><td></td><td></td><td></td></tr>
+        <tr><td>7</td><td>24BTDTEES102</td><td>OOPS LAB</td><td>Practical</td><td></td><td></td><td></td></tr>
+        <tr><td>8</td><td>24BTDTEES104</td><td>DS LAB</td><td>Practical</td><td></td><td></td><td></td></tr>
+        <tr><td>9</td><td>24BTDTEES203</td><td>DT LAB</td><td>Practical</td><td></td><td></td><td></td></tr>
+        <tr><td>10</td><td>24BTDTEES204</td><td>CAD LAB</td><td>Practical</td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <div class="footer">
+      <p><strong>Total Credits:</strong> <span id="total-credits">0</span><br>
+         <strong>SGPA:</strong> <span id="sgpa">0.00</span></p>
+      <p class="grade-description" id="grade-note"></p>
+      <p><em>Controller of Examinations</em></p>
+    </div>
+
+    <div class="action-buttons">
+      <button onclick="window.print()">Print Page</button>
+      <button onclick="exportToPDF()">Export to PDF</button>
+    </div>
+  </div>
+
+  <!-- html2pdf.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script>
+    const gradeRules = [
+      { min: 90, grade: 'O', point: 10 },
+      { min: 80, grade: 'A', point: 9 },
+      { min: 70, grade: 'B', point: 8 },
+      { min: 60, grade: 'C', point: 7 },
+      { min: 50, grade: 'D', point: 6 },
+      { min: 40, grade: 'E', point: 5 },
+      { min: 0,  grade: 'F', point: 0 }
+    ];
+
+    const gradeDescriptions = {
+      'O': 'Outstanding',
+      'A': 'Excellent',
+      'B': 'Very Good',
+      'C': 'Good',
+      'D': 'Average',
+      'E': 'Pass',
+      'F': 'Fail'
+    };
+
+    function assignMarksAndCalculate() {
+      const table = document.getElementById("result-table").getElementsByTagName("tbody")[0];
+      const rows = table.getElementsByTagName("tr");
+
+      let totalCredits = 0;
+      let totalPoints = 0;
+
+      for (let row of rows) {
+        const type = row.cells[3].innerText.trim();
+        const marks = Math.floor(Math.random() * 101); // 0 to 100
+        row.cells[4].innerText = marks;
+
+        // Determine grade and grade point
+        let gradeInfo = gradeRules.find(rule => marks >= rule.min);
+        row.cells[5].innerText = gradeInfo.grade;
+
+        // Assign credit based on type (you can customize this logic)
+        let credit = (type === "Theory") ? 3 : 1;
+        row.cells[6].innerText = credit;
+
+        totalCredits += credit;
+        totalPoints += credit * gradeInfo.point;
+      }
+
+      let sgpa = totalPoints / totalCredits;
+      document.getElementById("total-credits").innerText = totalCredits;
+      document.getElementById("sgpa").innerText = sgpa.toFixed(2);
+
+      let note = Object.entries(gradeDescriptions).map(([key, desc]) => `${key} = ${desc}`).join(" | ");
+      document.getElementById("grade-note").innerText = `Grade Scale: ${note}`;
+    }
+
+    function exportToPDF() {
+      const element = document.getElementById("result-container");
+      const opt = {
+        margin: 0.5,
+        filename: 'BTech_Result_GEC.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save();
+    }
+
+    window.onload = assignMarksAndCalculate;
+  </script>
+</body>
+</html>
